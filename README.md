@@ -1,0 +1,2 @@
+[![Build Status](https://travis-ci.com/mezzong/job4j_grabber.svg?branch=main)](https://travis-ci.com/mezzong/job4j_grabber)
+[![codecov](https://codecov.io/gh/mezzong/job4j_grabber/branch/main/graph/badge.svg?token=LTL51NOQWH)](https://codecov.io/gh/mezzong/job4j_grabber)

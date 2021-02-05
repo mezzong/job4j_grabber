@@ -5,6 +5,8 @@ import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.Properties;
 
 import static org.quartz.JobBuilder.newJob;
@@ -15,12 +17,21 @@ public class AlertRabbit {
     public static void main(String[] args) {
         try (InputStream in = AlertRabbit.class.getClassLoader()
                 .getResourceAsStream("rabbit.properties")) {
-            Properties properties = new Properties();
-            properties.load(in);
-            int interval = Integer.parseInt(properties.getProperty("rabbit.interval"));
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
-            JobDetail job = newJob(Rabbit.class).build();
+            Properties properties = new Properties();
+            properties.load(in);
+            Class.forName(properties.getProperty("driver-class-name"));
+            String url = properties.getProperty("url");
+            String login = properties.getProperty("login");
+            String password = properties.getProperty("password");
+            Connection connection = DriverManager.getConnection(url, login, password);
+            JobDataMap data = new JobDataMap();
+            data.put("store", connection);
+            int interval = Integer.parseInt(properties.getProperty("rabbit.interval"));
+            JobDetail job = newJob(Rabbit.class)
+                    .usingJobData(data)
+                    .build();
             SimpleScheduleBuilder times = simpleSchedule()
                     .withIntervalInSeconds(interval)
                     .repeatForever();
@@ -29,6 +40,8 @@ public class AlertRabbit {
                     .withSchedule(times)
                     .build();
             scheduler.scheduleJob(job, trigger);
+            Thread.sleep(10000);
+            scheduler.shutdown();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,4 +1,4 @@
-package ru.job4j.grabber.html;
+package ru.job4j.html;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

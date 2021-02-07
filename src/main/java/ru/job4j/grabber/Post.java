@@ -7,12 +7,14 @@ public class Post {
     private final String text;
     private final String author;
     private final LocalDateTime created;
+    private final String link;
 
-    public Post(String name, String text, String author, LocalDateTime created) {
+    public Post(String name, String text, String author, LocalDateTime created, String link) {
         this.name = name;
         this.text = text;
         this.author = author;
         this.created = created;
+        this.link = link;
     }
 
     public String getName() {
@@ -31,6 +33,10 @@ public class Post {
         return created;
     }
 
+    public String getUrl() {
+        return link;
+    }
+
     @Override
     public String toString() {
         return "Post{"
@@ -38,6 +44,7 @@ public class Post {
                 + ", text='" + text + '\''
                 + ", author='" + author + '\''
                 + ", created=" + created
+                + ", link='" + link + '\''
                 + '}';
     }
 }

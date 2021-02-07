@@ -30,4 +30,14 @@ public class Post {
     public LocalDateTime getCreated() {
         return created;
     }
+
+    @Override
+    public String toString() {
+        return "Post{"
+                + "name='" + name + '\''
+                + ", text='" + text + '\''
+                + ", author='" + author + '\''
+                + ", created=" + created
+                + '}';
+    }
 }

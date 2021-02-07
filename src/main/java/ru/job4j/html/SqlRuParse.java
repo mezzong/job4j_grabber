@@ -4,14 +4,19 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.job4j.grabber.Post;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class SqlRuParse {
     public static void main(String[] args) throws Exception {
-        int i = 1;
+        Post post = postDetail("https://www.sql.ru/forum/1325330/"
+               + "lidy-be-fe-senior-cistemnye-analitiki-qa-i-devops-moskva-do-200t");
+        System.out.println(post);
+        /*int i = 1;
         while (i < 6) {
             Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers" + "/" + i).get();
             Elements row = doc.select(".postslisttopic");
@@ -26,7 +31,7 @@ public class SqlRuParse {
                 index += 2;
             }
             i++;
-        }
+        }*/
     }
 
     public static LocalDateTime stringToDate(String date) {
@@ -56,5 +61,23 @@ public class SqlRuParse {
             }
         }
         return LocalDateTime.of(year, month, day, hour, minute);
+    }
+
+    public static Post postDetail(String url) {
+        Post result = null;
+        try {
+            Document doc = Jsoup.connect(url).get();
+            Elements header = doc.select(".messageHeader");
+            Elements body = doc.select(".msgBody");
+            Elements footer = doc.select(".msgFooter");
+            String name = header.get(0).text();
+            String text = body.get(1).text();
+            String author = body.get(0).child(0).text();
+            String date =  footer.get(0).text().split("\\s\\[")[0];
+            result = new Post(name, text, author, stringToDate(date));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        return result;
     }
 }
